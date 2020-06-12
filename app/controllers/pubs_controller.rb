@@ -1,5 +1,4 @@
 class PubsController < ApplicationController
-  
   def index
     @pubs = Pub.all
   end
@@ -7,5 +6,4 @@ class PubsController < ApplicationController
   def show
     @pub = Pub.find(params[:id])
   end
-  
 end
