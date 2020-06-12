@@ -10,10 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_12_133514) do
+ActiveRecord::Schema.define(version: 2020_06_12_142714) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "baskets", force: :cascade do |t|
+    t.float "total"
+    t.string "state"
+    t.bigint "user_id", null: false
+    t.bigint "order_items_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["order_items_id"], name: "index_baskets_on_order_items_id"
+    t.index ["user_id"], name: "index_baskets_on_user_id"
+  end
 
   create_table "drinks", force: :cascade do |t|
     t.string "name"
@@ -23,6 +34,14 @@ ActiveRecord::Schema.define(version: 2020_06_12_133514) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["pub_id"], name: "index_drinks_on_pub_id"
+  end
+
+  create_table "order_items", force: :cascade do |t|
+    t.integer "quantity"
+    t.bigint "drink_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["drink_id"], name: "index_order_items_on_drink_id"
   end
 
   create_table "pubs", force: :cascade do |t|
@@ -47,5 +66,8 @@ ActiveRecord::Schema.define(version: 2020_06_12_133514) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "baskets", "order_items", column: "order_items_id"
+  add_foreign_key "baskets", "users"
   add_foreign_key "drinks", "pubs"
+  add_foreign_key "order_items", "drinks"
 end
